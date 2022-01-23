@@ -1,0 +1,78 @@
+buildscript {
+    ext {
+        kotlinVersion = "1.5.21"
+        kotlinLoggingVersion = "2.0.8"
+        springBootVersion = "2.5.3"
+    }
+
+    repositories {
+        maven { url = uri("https://repo.spring.io/release") }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+subprojects {
+    project.group = "com.sumfi.playground"
+
+    repositories {
+        maven { url = uri("https://repo.spring.io/release") }
+        mavenCentral()
+    }
+
+    if (it.name == "core") {
+        apply plugin: "java-library"
+    } else {
+        apply plugin: "application"
+    }
+
+    apply plugin: "idea"
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+        }
+    }
+
+    apply plugin: "java"
+    apply plugin: "kotlin"
+    apply plugin: "org.springframework.boot"
+    apply plugin: "kotlin-jpa"
+    apply plugin: "kotlin-allopen"
+    allOpen {
+        annotation "javax.persistence.Entity"
+        annotation "javax.persistence.MappedSuperclass"
+        annotation "javax.persistence.Embeddable"
+    }
+
+    apply plugin: "kotlin-spring"
+    apply plugin: "kotlin-noarg"
+    apply plugin: "kotlin-kapt"
+    apply plugin: "io.spring.dependency-management"
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+
+    dependencies {
+        implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+        implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
+        implementation('com.github.jasync-sql:jasync-r2dbc-mysql:2.0.6')
+        implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+        implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+        implementation("org.jetbrains.kotlin:kotlin-reflect")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+        runtimeOnly("dev.miku:r2dbc-mysql")
+        runtimeOnly("mysql:mysql-connector-java")
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
+        testImplementation("io.projectreactor:reactor-test")
+
+    }
+}

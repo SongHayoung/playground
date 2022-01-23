@@ -1,0 +1,43 @@
+version = "1.0.0-SNAPSHOT"
+
+application {
+    mainClass = "com.sumfi.playground.api.ApiApplicationKt"
+}
+
+bootJar {
+    enabled = true
+}
+
+jar {
+    enabled = false
+}
+
+dependencies {
+    implementation project(":core")
+    testImplementation project(":core")
+
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+}
+task wrapper(type: Wrapper) {
+    gradleVersion = '7.0'
+}
+task prepareKotlinBuildScriptModel {
+
+}
+
+processResources {
+    duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.INCLUDE
+}
+
+def profile = project.findProperty("profile") ?: "local"
+def core = "$rootDir/core"
+println("rootDir : ${rootDir}")
+println("profile : ${profile}")
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources", "src/main/resources-${profile}", "$core/src/main/resources/$profile"
+        }
+    }
+}

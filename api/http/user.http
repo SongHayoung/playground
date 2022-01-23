@@ -1,0 +1,17 @@
+###
+POST /user
+Accept: *
+Content-Type: application/json
+Host: localhost:8080
+
+{
+  "name": "song",
+  "age": 10
+}
+
+###
+GET /user/1
+Accept: *
+Content-Type: application/json
+Host: localhost:8080
+
